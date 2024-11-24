@@ -7,12 +7,12 @@ This project automates the deployment and configuration of FTP clients and serve
 ## 📋 Playbooks Overview
 
 ### 1️⃣ **Client Setup Playbook**
-- Ensures the `lftp` package is installed on systems designated as FTP clients.
+- Ensures the lftp package is installed on systems designated as FTP clients.
 - Verifies the presence of the software and installs it if missing.
 - Guarantees all client systems are consistent and ready for file transfers.
 
 ### 2️⃣ **Server Setup and Configuration Playbook**
-- Installs and configures the **`vsftpd`** service on systems that act as FTP servers.
+- Installs and configures the vsftpd service on systems that act as FTP servers.
 - Manages the configuration file to ensure secure and reliable operation.
 - Provides flexibility for tailoring the server to your specific requirements.
 
