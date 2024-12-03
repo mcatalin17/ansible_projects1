@@ -29,11 +29,12 @@ Configuration of SNMP and syslog for various network device groups:
 ## 📂 Project Structure  
 
 ```
-simplify-review/
+simplify/
 ├── ansible.cfg          # Configuration file for collections and repositories
 ├── collections/         # Directory for Ansible collections
 │   └── requirements.yml # List of required collections
 ├── monitoring.yml       # Main playbook for configuring SNMP and syslog
+├──verify_monitoring.yml # Make sure the configuration is correct
 ├── resource_modules.yml # Playbook for listing supported resource modules
 ├── tasks/               # Task files for device-specific configurations
 │   ├── juniper_netconf_enable.yml
