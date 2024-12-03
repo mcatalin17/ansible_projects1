@@ -1,1 +1,46 @@
+# Network Device Configuration Automation with Ansible Roles and Collections
+
+This project demonstrates how to use Ansible roles and content collections to automate the configuration of SNMP, NETCONF, and syslog across multiple network devices from different vendors, including Juniper, Cisco, and Arista. Additionally, it includes tasks for exploring supported network resource modules using the `network.base` collection.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Project Structure](#project-structure)
+- [Setup Instructions](#setup-instructions)
+  - [Pre-requisites](#pre-requisites)
+  - [Setup Steps](#setup-steps)
+- [Usage](#usage)
+- [Project Files](#project-files)
+- [Expected Outputs](#expected-outputs)
+
+---
+
+## Overview
+
+This project automates network configuration tasks, including:
+- Enabling NETCONF on Juniper devices.
+- Configuring SNMP settings on Juniper, Cisco, and Arista devices.
+- Configuring syslog on Cisco devices.
+- Listing supported network resource modules for Cisco IOS devices.
+
+The project leverages Ansible roles and collections to streamline playbook design and enhance modularity.
+
+---
+
+## Project Structure
+
+```plaintext
+simplify-review/
+├── ansible.cfg               # Ansible configuration file with collection paths and repository details
+├── collections/
+│   └── requirements.yml      # Specifies required collections and their versions
+├── tasks/
+│   ├── arista_snmp.yml       # SNMP configuration tasks for Arista devices
+│   ├── cisco_snmp.yml        # SNMP configuration tasks for Cisco devices
+│   ├── juniper_netconf_enable.yml  # NETCONF enablement tasks for Juniper devices
+│   ├── juniper_snmp.yml      # SNMP configuration tasks for Juniper devices
+├── monitoring.yml            # Main playbook for configuring network monitoring
+├── syslog.yml                # Playbook for configuring syslog on managed devices
+├── resource_modules.yml      # Playbook for listing supported resource modules
+└── verify_monitoring.yml     # Playbook for verifying the configurations
 
