@@ -41,5 +41,5 @@ simplify-review/
 │   ├── cisco_snmp.yml
 │   └── arista_snmp.yml
 └── syslog.yml           # Playbook for syslog configuration
-## Installation
+
 
