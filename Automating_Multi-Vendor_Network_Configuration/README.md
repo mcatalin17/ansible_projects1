@@ -2,9 +2,16 @@
 
 ## Project Description
 
-This project is designed to automate network configuration and monitoring tasks using Ansible. It targets network devices such as Junos (Juniper), IOS (Cisco), and EOS (Arista), providing automated configuration for SNMP, NETCONF, and syslog settings. The goal is to enhance network management by automating tedious configuration tasks, ensuring consistency across the devices, and simplifying monitoring setup.
+This project is designed to automate network configuration and monitoring tasks using Ansible. It targets network devices such as Junos (Juniper), IOS (Cisco), and EOS (Arista), providing automated configuration for SNMP, NETCONF, and syslog settings. 
+ 
 
-The project includes various playbooks and roles for automating tasks like enabling NETCONF on Junos devices, configuring SNMP on Cisco and Arista devices, and setting up syslog for logging purposes. 
+## ⚠️ NOTE  
+This project was developed and tested in a **Red Hat environment**, and the configurations are optimized for Red Hat-based systems.
+
+
+## 📦 Collections Integration
+Installation and usage of Ansible collections via private Automation Hub repositories.
+
 
 ## Key Features
 - **Automated SNMP Configuration**: Automatically configures SNMP settings across Cisco, Juniper, and Arista devices.
@@ -13,29 +20,26 @@ The project includes various playbooks and roles for automating tasks like enabl
 - **Cross-Vendor Support**: Supports multiple network operating systems (Junos, IOS, EOS) for consistent network management.
 - **Verification Playbooks**: Includes playbooks to verify the configuration on managed devices.
 
-## Technologies Used
+## 🌐 Network Device Automation
+Configuration of SNMP and syslog for various network device groups:
+- **Juniper** (NETCONF and SNMP)
+- **Cisco** (SNMP)
+- **Arista** (SNMP)
 
-- **Ansible**: Used for automating configuration management and provisioning of network devices.
-- **Junos (Juniper)**: Configurations for enabling NETCONF and SNMP.
-- **IOS (Cisco)**: SNMP and syslog configuration.
-- **EOS (Arista)**: SNMP configuration.
+## 📂 Project Structure  
 
-## Project Structure
 
-The project is organized into the following components:
-
-- **Playbooks**:
-  - `monitoring.yml`: Main playbook to configure monitoring settings (NETCONF and SNMP).
-  - `verify_monitoring.yml`: Verifies the success of the configuration changes.
-- **Roles**:
-  - `network.base`: Contains roles for configuring network devices.
-- **Tasks**:
-  - Tasks for each device type (Junos, Cisco, Arista) to configure SNMP, NETCONF, and syslog settings.
-  
+simplify-review/
+├── ansible.cfg          # Configuration file for collections and repositories
+├── collections/         # Directory for Ansible collections
+│   └── requirements.yml # List of required collections
+├── monitoring.yml       # Main playbook for configuring SNMP and syslog
+├── resource_modules.yml # Playbook for listing supported resource modules
+├── tasks/               # Task files for device-specific configurations
+│   ├── juniper_netconf_enable.yml
+│   ├── juniper_snmp.yml
+│   ├── cisco_snmp.yml
+│   └── arista_snmp.yml
+└── syslog.yml           # Playbook for syslog configuration
 ## Installation
 
-1. **Clone the repository**:
-
-```bash
-git clone https://github.com/yourusername/ansible-network-config.git
-cd ansible-network-config
