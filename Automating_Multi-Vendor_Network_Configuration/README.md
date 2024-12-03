@@ -28,7 +28,7 @@ Configuration of SNMP and syslog for various network device groups:
 
 ## 📂 Project Structure  
 
-
+```
 simplify-review/
 ├── ansible.cfg          # Configuration file for collections and repositories
 ├── collections/         # Directory for Ansible collections
