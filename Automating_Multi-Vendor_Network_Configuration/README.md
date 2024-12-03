@@ -1,4 +1,4 @@
-# Ansible Project: Network Configuration and Monitoring Automation
+# Network Configuration and Monitoring Automation
 
 ## Project Description
 
