@@ -1,0 +1,31 @@
+---
+- name: Configure monitoring on managed network nodes
+  hosts:
+    - junos
+    - ios
+    - eos
+  gather_facts: false
+  tasks:
+    - name: Juniper Junos block
+      when: inventory_hostname in groups['junos']
+      block:
+        - name: Enable NETCONF
+          ansible.builtin.include_tasks: tasks/juniper_netconf_enable.yml
+
+        - name: Configure Juniper SNMP settings
+          ansible.builtin.include_tasks: tasks/juniper_snmp.yml
+
+    - name: Cisco IOS block
+      when: inventory_hostname in groups['ios']
+      block:
+        - name: Configure Cisco SNMP settings
+          ansible.builtin.include_tasks: tasks/cisco_snmp.yml
+
+    - name: Arista EOS block
+      when: inventory_hostname in groups['eos']
+      block:
+        - name: Configure Arista SNMP settings
+          ansible.builtin.include_tasks: tasks/arista_snmp.yml
+
+- name: Configure syslog
+  ansible.builtin.import_playbook: syslog.yml

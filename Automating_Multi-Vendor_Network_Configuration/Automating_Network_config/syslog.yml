@@ -1,0 +1,15 @@
+---
+- name: Confgure syslog on IOS managed nodes
+  hosts: ios
+  gather_facts: false
+  tasks:
+    - name: Configure syslog
+      cisco.ios.ios_logging_global:
+        config:
+          trap: warnings
+          facility: local5
+          hosts:
+            - host: 192.168.10.10
+            - host: 192.168.11.10
+          logging_on: enable
+        state: replaced

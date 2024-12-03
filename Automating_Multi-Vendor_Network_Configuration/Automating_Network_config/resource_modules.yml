@@ -1,0 +1,10 @@
+---
+- name: List supported resource modules
+  hosts: ios
+  gather_facts: false
+  tasks:
+    - name: Network Resource Manager
+      ansible.builtin.include_role:
+        name: network.base.resource_manager
+      vars:
+        action: list

@@ -1,0 +1,173 @@
+---
+- name: Verify Junos SNMP was configured properly
+  hosts: junos
+  gather_facts: false
+  tasks:
+    - name: Set error_summary fact
+      ansible.builtin.set_fact:
+        error_summary: []
+
+    - name: Gather facts block
+      block:
+        - name: Gather listed snmp config
+          junipernetworks.junos.junos_snmp_server:
+            state: gathered
+          register: output
+
+      rescue:
+        - name: Update error_summary
+          when: "'Could not open socket' in output['msg']"
+          vars:
+            the_error:
+              - "The NETCONF service is not enabled on '{{ inventory_hostname }}'."
+          ansible.builtin.set_fact:
+            error_summary: "{{ error_summary + the_error }}"
+
+    - name: Verify block
+      when: output['failed'] | bool == false
+      block:
+        - name: Verify the correct contact info was configured
+          ansible.builtin.assert:
+            that:
+              - output['gathered'] is defined
+              - output['gathered']['contact'] is defined
+              - "'Network Engineering | neteng@company.com' in output['gathered']['contact']"
+            fail_msg: >-
+              SNMP is NOT configured properly on '{{ inventory_hostname }}'.
+            success_msg: >-
+              SNMP is configured properly on '{{ inventory_hostname }}'.
+          register: verify_snmp
+
+      rescue:
+        - name: Update error_summary
+          vars:
+            the_error:
+              - "{{ verify_snmp['msg'] }}"
+          ansible.builtin.set_fact:
+            error_summary: "{{ error_summary + the_error }}"
+
+- name: Verify IOS SNMP was configured properly
+  hosts: ios
+  gather_facts: false
+  tasks:
+    - name: Set error_summary fact
+      ansible.builtin.set_fact:
+        error_summary: []
+
+    - name: Gather listed snmp config
+      cisco.ios.ios_snmp_server:
+        state: gathered
+      register: output
+
+    - name: Verify SNMP block
+      block:
+        - name: Verify the correct contact info was configured
+          ansible.builtin.assert:
+            that:
+              - output['gathered'] is defined
+              - output['gathered']['contact'] is defined
+              - "'Network Engineering | neteng@company.com' in output['gathered']['contact']"
+            fail_msg: >-
+              SNMP is NOT configured properly on '{{ inventory_hostname }}'.
+            success_msg: >-
+              SNMP is configured properly on '{{ inventory_hostname }}'.
+          register: verify_snmp
+
+      rescue:
+        - name: Update error_summary
+          vars:
+            the_error:
+              - "{{ verify_snmp['msg'] }}"
+          ansible.builtin.set_fact:
+            error_summary: "{{ error_summary + the_error }}"
+
+- name: Verify EOS SNMP was configured properly
+  hosts: eos
+  gather_facts: false
+  tasks:
+    - name: Set error_summary fact
+      ansible.builtin.set_fact:
+        error_summary: []
+
+    - name: Gather listed snmp config
+      arista.eos.eos_snmp_server:
+        state: gathered
+      register: output
+
+    - name: Verify SNMP block
+      block:
+        - name: Verify the correct contact info was configured
+          ansible.builtin.assert:
+            that:
+              - output['gathered'] is defined
+              - output['gathered']['contact'] is defined
+              - "'Network Engineering | neteng@company.com' in output['gathered']['contact']"
+            fail_msg: >-
+              SNMP is NOT configured properly on '{{ inventory_hostname }}'.
+            success_msg: >-
+              SNMP is configured properly on '{{ inventory_hostname }}'.
+          register: verify_snmp
+
+      rescue:
+        - name: Update error_summary
+          vars:
+            the_error:
+              - "{{ verify_snmp['msg'] }}"
+          ansible.builtin.set_fact:
+            error_summary: "{{ error_summary + the_error }}"
+
+- name: Verify IOS syslog was configured properly
+  hosts: ios
+  gather_facts: false
+  tasks:
+    - name: Gather listed logging config
+      cisco.ios.ios_logging_global:
+        state: gathered
+      register: output
+
+    - name: Verify syslog block
+      block:
+        - name: Verify the correct syslog server logging level was configured
+          ansible.builtin.assert:
+            that:
+              - output['gathered'] is defined
+              - output['gathered']['trap'] is defined
+              - "'warnings' in output['gathered']['trap']"
+            fail_msg: >-
+              Logging is NOT configured properly on '{{ inventory_hostname }}'.
+            success_msg: >-
+              Logging is configured properly on '{{ inventory_hostname }}'.
+          register: verify_syslog
+
+      rescue:
+        - name: Update error_summary
+          vars:
+            the_error:
+              - "{{ verify_syslog['msg'] }}"
+          ansible.builtin.set_fact:
+            error_summary: "{{ error_summary + the_error }}"
+
+- name: Display combined_error_summary
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Set combined_error_summary
+      ansible.builtin.set_fact:
+        combined_error_summary: []
+
+    - name: Update combined_error_summary
+      when:
+        - hostvars[item] is defined
+        - hostvars[item]['error_summary'] is defined
+        - hostvars[item]['error_summary'] | length > 0
+      vars:
+        node_errors: "{{ hostvars[item]['error_summary'] }}"
+      ansible.builtin.set_fact:
+        combined_error_summary: "{{ combined_error_summary + node_errors }}"
+      loop: "{{ groups['ios'] + groups['junos'] + groups['eos'] | flatten }}"
+
+    - name: Display combined_error_summary
+      ansible.builtin.assert:
+        that: combined_error_summary | length == 0
+        success_msg: All settings are configured correctly.
+        fail_msg: "{{ combined_error_summary | flatten | unique }}"
